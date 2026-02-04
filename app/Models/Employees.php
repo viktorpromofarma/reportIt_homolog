@@ -21,7 +21,7 @@ class Employees extends Model
 
         $employeesRegistered = $this->getEmployeesRegistered();
 
-        $employeesBase = $this->getEmployeesBase()->whereNotIn('inscricao_federal', $employeesRegistered)->get();
+        $employeesBase = $this->getEmployeesBase()->whereNotIn('INSCRICAO_FEDERAL', $employeesRegistered);
 
         return $employeesBase;
     }
@@ -49,41 +49,13 @@ class Employees extends Model
 
 public function getEmployeesUpdate()
 {
-    $employeesBase = $this->getEmployeesBase();
+   
 
-    $employeesRegistered = RegisteredEmployees::all()
-        ->keyBy('CPF');
+    $employeesOutdated = DB::connection('api')->table('VW_EMPLOYEES_OUTDATED')->get();
 
-    return $employeesBase->filter(function ($employee) use ($employeesRegistered) {
+    return $employeesOutdated;
 
-        if (!isset($employeesRegistered[$employee->INSCRICAO_FEDERAL])) {
-            return false;
-        }
-
-        $registered = $employeesRegistered[$employee->INSCRICAO_FEDERAL];
-
-        return
-            $employee->COMPANYWORKPLACEID != $registered->COMPANY_WORKPLACE_ID ||
-            $employee->DEPARTMENTID        != $registered->DEPARTMENT_ID ||
-            $employee->POSITIONID          != $registered->POSITION_ID ||
-            $employee->TYPE                != $registered->TYPE_ID;
-
-    })->map(function ($employee) use ($employeesRegistered) {
-
-        $registered = $employeesRegistered[$employee->INSCRICAO_FEDERAL];
-
-        return [
-            'COMPANY_ID'          => $employee->COMPANY_ID,
-            'NOME'                => $employee->NOME,
-            'INSCRICAO_FEDERAL'   => $employee->INSCRICAO_FEDERAL,
-            'COMPANYWORKPLACEID' => $employee->COMPANYWORKPLACEID,
-            'DEPARTMENTID'       => $employee->DEPARTMENTID,
-            'POSITIONID'         => $employee->POSITIONID,
-            'TYPE'                => $employee->TYPE,
-            'ID_REPORT_IT'        => $registered->ID_REPORT_IT,
-        ];
-
-    })->values();
+    
 }
 
 

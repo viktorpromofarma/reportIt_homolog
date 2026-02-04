@@ -38,7 +38,7 @@ class CreateEmployees extends Command
         $EmployeesModel = new Employees();
         $employees = $EmployeesModel->getEmployees();
 
-    
+ 
         foreach ($employees as $employees) {
 
         $body = [
@@ -67,8 +67,6 @@ class CreateEmployees extends Command
 
 
     } catch (\GuzzleHttp\Exception\ClientException $e) {
-
-            dd($e);
 
          Logs::createLog($command. " - " . $employees->INSCRICAO_FEDERAL, "erro", date_format(now(), 'd-m-Y H:i:s'));
 

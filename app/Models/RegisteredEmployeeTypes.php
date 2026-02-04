@@ -13,7 +13,7 @@ class RegisteredEmployeeTypes extends Model
 
     protected $table = 'EMPLOYEE_TYPES_REPORT_IT';
 
-    protected $primaryKey = 'EMPLOYEE_TYPE_REPORT_I';
+    protected $primaryKey = 'EMPLOYEE_TYPE_REPORT_IT';
 
 
     protected $fillable = [

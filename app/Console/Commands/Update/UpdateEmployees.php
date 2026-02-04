@@ -28,23 +28,26 @@ class UpdateEmployees extends Command
 
     public function handle()
     {
-        $employees = $this->updateEmployees();
+        $employeesOutdated = $this->updateEmployees();
+
+        
+
         $client = new Client();
         $header = Headers::getHeaders();
         $url_base = $this->getUrlBase();
         $command = "employees/update";
         $urlCompleta = $url_base . $command;
 
-        foreach ($employees as $employees) {
+        foreach ($employeesOutdated as $employees) {
           $body = [
-                    "id"                 => $employees['ID_REPORT_IT'],
-                    "companyId"          => $employees['COMPANY_ID'],
-                    "cpf"                => (string) $employees['INSCRICAO_FEDERAL'],
-                    "name"               => $employees['NOME'],
-                    "companyWorkPlaceId" => $employees['COMPANYWORKPLACEID'],
-                    "departmentId"       => $employees['DEPARTMENTID'],
-                    "positionId"         => $employees['POSITIONID'],
-                    "type"               => $employees['TYPE'],
+                    "id"                 => $employees->ID_REPORT_IT,
+                    "companyId"          => $employees->COMPANY_ID,
+                    "cpf"                => (string) $employees->INSCRICAO_FEDERAL,
+                    "name"               => $employees->NOME,
+                    "companyWorkPlaceId" => $employees->COMPANYWORKPLACEID,
+                    "departmentId"       => $employees->DEPARTMENTID,
+                    "positionId"         => $employees->POSITIONID,
+                    "type"               => $employees->TYPE,
                 ];
 
             try {
@@ -54,12 +57,13 @@ class UpdateEmployees extends Command
 
                 ]);
                 $response = json_decode($res->getBody()->getContents(), true);
-                Logs::createLog($command . " - " . $employees['NOME'], "sucess", date_format(now(), 'd-m-Y H:i:s'));
-                $this->info("Funcionário atualizado: {$employees['NOME']}");
+
+                Logs::createLog($command . " - " . $employees->NOME, "sucess", date_format(now(), 'd-m-Y H:i:s'));
+                $this->info("Funcionário atualizado: {$employees->NOME}");
             } catch (\GuzzleHttp\Exception\ClientException $e) {
-                Logs::createLog($command . " - " . $employees['NOME'], "erro", date_format(now(), 'd-m-Y H:i:s'));
+                Logs::createLog($command . " - " . $employees->NOME, "erro", date_format(now(), 'd-m-Y H:i:s'));
                 $this->error(
-                    "Erro ao atualizar funcionário {$employees['NOME']}: " .
+                    "Erro ao atualizar funcionário {$employees->NOME}: " .
                         $e->getResponse()->getBody()->getContents()
                 );
             }

@@ -14,7 +14,7 @@ use App\Models\Logs;
 class CreateDepartaments extends Command
 { 
 
-    protected $signature = "report:createdepartaments";
+    protected $signature = "report:createdepartments";
 
     protected $description = "Comando para criar departamentos na API Report It";
 
